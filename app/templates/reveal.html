@@ -2,6 +2,7 @@
 {% from 'partials/fields.html' import csrf_field %}
 {% block title %}{{ _('Private Reveal') }} | Secret Santa{% endblock %}
 {% block event_subtitle %} - {{ reveal.title }}{% endblock %}
+{% block site_footer %}{% endblock %}
 {% block content %}
 <div class="narrow">
   <h1>{{ _('Welcome, {name}!', name=reveal.own_name) }}</h1>

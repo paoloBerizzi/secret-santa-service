@@ -37,7 +37,7 @@
     </form>
   </div></header>
   <main class="shell">{% block content %}{% endblock %}
-    <footer class="site-footer"><a href="/how-to-use">{{ _('How to use') }}</a></footer>
+    {% block site_footer %}<footer class="site-footer"><a href="/how-to-use">{{ _('How to use') }}</a></footer>{% endblock %}
   </main>
 </body>
 </html>

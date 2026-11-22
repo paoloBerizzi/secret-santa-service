@@ -29,6 +29,7 @@ def test_draw_reveal_wishlist_and_reset(browser):
         link = private_links[giver - 1]
         page = browser.get(link)
         assert page.status_code == 200
+        assert '<a href="/how-to-use">' not in page.text
         assert page.headers['Cache-Control'] == 'no-store'
         assert page.headers['Referrer-Policy'] == 'no-referrer'
         assert '<span class="brand">Secret Santa - Family exchange</span>' in page.text
