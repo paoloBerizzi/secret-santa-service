@@ -12,6 +12,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 body {
+	position: relative;
 	margin: 0;
 	min-height: 100vh;
 	color: var(--ink);
@@ -24,7 +25,7 @@ body {
 	background-size: 56px 56px, 94px 94px, auto;
 	background-position: 0 0, 25px 35px, 0 0;
 }
-.woodland { position: fixed; inset: 0; overflow: hidden; pointer-events: none; user-select: none; }
+.woodland { position: absolute; inset: 0; overflow: hidden; pointer-events: none; user-select: none; }
 .woodland span { position: absolute; line-height: 1; }
 .woodland-fox { font-size: 2rem; opacity: .8; }
 .woodland-tree { font-size: 2.5rem; opacity: .35; }
