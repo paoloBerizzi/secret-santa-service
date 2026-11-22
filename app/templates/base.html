@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="{{ locale }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false}'>
+  <title>{% block title %}Secret Santa{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" integrity="sha384-HtMZLkYo+pR5/u7zCzXxMJP6QoNnQJt1qkHM0EaOPvGDIzaVZbmYr/TlvUZ/sKAg" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/app.css?v=8">
+  <script defer src="/static/vendor/htmx.min.js"></script>
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <div class="woodland" aria-hidden="true">
+    <span class="woodland-fox fox-one">{{ event_icon }}</span><span class="woodland-fox fox-two">{{ event_icon }}</span>
+    <span class="woodland-fox fox-three">{{ event_icon }}</span><span class="woodland-fox fox-four">{{ event_icon }}</span>
+    <span class="woodland-fox fox-five">{{ event_icon }}</span><span class="woodland-fox fox-six">{{ event_icon }}</span>
+    <span class="woodland-fox fox-seven">{{ event_icon }}</span><span class="woodland-fox fox-eight">{{ event_icon }}</span>
+    <span class="woodland-fox fox-nine">{{ event_icon }}</span><span class="woodland-fox fox-ten">{{ event_icon }}</span>
+    <span class="woodland-fox fox-eleven">{{ event_icon }}</span><span class="woodland-fox fox-twelve">{{ event_icon }}</span>
+    <span class="woodland-tree tree-one">🌲</span><span class="woodland-tree tree-two">🌲</span>
+    <span class="woodland-tree tree-three">🌲</span><span class="woodland-tree tree-four">🌲</span>
+    <span class="woodland-tree tree-five">🌲</span><span class="woodland-tree tree-six">🌲</span>
+    <span class="woodland-tree tree-seven">🌲</span><span class="woodland-tree tree-eight">🌲</span>
+    <span class="woodland-tree tree-nine">🌲</span><span class="woodland-tree tree-ten">🌲</span>
+    <span class="woodland-tree tree-eleven">🌲</span><span class="woodland-tree tree-twelve">🌲</span>
+    <span class="woodland-gift sparkle-one">🎁</span><span class="woodland-gift sparkle-two">🎁</span>
+    <span class="woodland-gift sparkle-three">🎁</span><span class="woodland-gift sparkle-four">🎁</span>
+    <span class="woodland-gift gift-five">🎁</span><span class="woodland-gift gift-six">🎁</span>
+    <span class="woodland-gift gift-seven">🎁</span><span class="woodland-gift gift-eight">🎁</span>
+  </div>
+  <header class="masthead"><div class="shell"><span class="mark" aria-hidden="true">{{ event_icon }}</span><span class="brand">Secret Santa{% block event_subtitle %}{% endblock %}</span>
+    <form class="language-switch" method="post" action="/language" aria-label="{{ _('Language') }}">
+      <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="return_to" value="{{ request.url.path }}">
+      <button type="submit" name="language" value="it" lang="it" aria-pressed="{{ 'true' if locale == 'it' else 'false' }}">Italiano</button>
+      <button type="submit" name="language" value="en" lang="en" aria-pressed="{{ 'true' if locale == 'en' else 'false' }}">English</button>
+    </form>
+  </div></header>
+  <main class="shell">{% block content %}{% endblock %}</main>
+</body>
+</html>

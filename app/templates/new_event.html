@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% from 'partials/fields.html' import csrf_field, settings with context %}
+{% block title %}{{ _('New exchange') }} | Secret Santa{% endblock %}
+{% block content %}
+<div class="narrow">
+  <h1>{{ _('New exchange') }}</h1>
+  <form action="/events" method="post" class="stack">
+    {{ csrf_field(csrf) }}{{ settings(none, currencies) }}
+    <button class="primary">{{ _('Create event') }}</button>
+  </form>
+</div>
+{% endblock %}

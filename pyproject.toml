@@ -1,0 +1,19 @@
+[project]
+name = "secret-santa-service"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.14",
+    "fastapi>=0.115",
+    "jinja2>=3.1.6",
+    "psycopg[binary]>=3.2",
+    "python-multipart>=0.0.22",
+    "sqlalchemy>=2.0",
+    "uvicorn>=0.34",
+]
+
+[dependency-groups]
+dev = ["httpx2", "pytest>=8.3"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

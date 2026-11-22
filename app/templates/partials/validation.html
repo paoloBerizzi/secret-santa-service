@@ -1,0 +1,4 @@
+<div class="validation {{ validation.status }}">
+{% if validation.status == 'feasible' %}<p>{{ _('A valid draw is possible.') }}</p>
+{% else %}<ul>{% for message in validation.messages %}<li>{{ message }}</li>{% endfor %}</ul>{% endif %}
+</div>

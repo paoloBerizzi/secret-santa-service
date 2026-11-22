@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% from 'partials/fields.html' import csrf_field, settings, person_options with context %}
+{% set root = '/' ~ admin | join('/') %}
+{% block title %}{{ _('Organizer') }} | Secret Santa{% endblock %}
+{% block event_subtitle %} - {{ event.title }}{% endblock %}
+{% block content %}
+<div class="event-heading"><div><p class="eyebrow">{{ _('Organizer') }}</p><h1>{{ event.title }}</h1></div><strong class="state">{{ _(event.state) | capitalize }}</strong></div>
+<div class="actions organizer-link"><button type="button" class="copy-button" data-copy="{{ request.app.state.settings.public_url }}{{ root }}">{{ _('Copy organizer link') }}</button><span role="status" class="copy-status"></span></div>
+<div class="dashboard">
+  <aside class="draw-panel">
+    <h2>{{ _('Draw') }}</h2>
+    {% if event.state == 'draft' %}
+      <form method="post" action="{{ root }}/validate" hx-post="{{ root }}/validate" hx-trigger="{% if not validation %}load, {% endif %}submit" hx-target="#validation">
+        {{ csrf_field(csrf) }}<button>{{ _('Check rules') }}</button>
+      </form>
+      <div id="validation" aria-live="polite">{% if validation %}{% include 'partials/validation.html' %}{% endif %}</div>
+      <form method="post" action="{{ root }}/draw">{{ csrf_field(csrf) }}<button class="primary">{{ _('Run draw') }}</button></form>
+    {% elif event.state == 'drawn' %}
+      <form method="post" action="{{ root }}/lock">{{ csrf_field(csrf) }}<button class="primary">{{ _('Lock and enable links') }}</button></form>
+    {% endif %}
+    {% if event.state != 'draft' %}
+      <form class="stack compact" method="post" action="{{ root }}/reset">
+        {{ csrf_field(csrf) }}<label class="check"><input type="checkbox" name="confirmed" required> {{ _('Discard the draw and revoke its links') }}</label>
+        <button class="danger">{{ _('Reset draw') }}</button>
+      </form>
+    {% endif %}
+  </aside>
+  <div class="sections">
+    <section>
+      <h2>{{ _('Event details') }}</h2>
+      {% if event.state == 'draft' %}
+        <form class="stack" method="post" action="{{ root }}/settings">{{ csrf_field(csrf) }}{{ settings(event, currencies) }}<button>{{ _('Save settings') }}</button></form>
+      {% else %}
+        <p>{{ event.currency }} {{ event.budget | money }} &middot; <time datetime="{{ event.exchange_date }}">{{ event.exchange_date.strftime('%d/%m/%Y') if locale == 'it' else event.exchange_date }}</time></p>
+        {% if event.notes %}<p class="multiline">{{ event.notes }}</p>{% endif %}
+        {% if event.no_reciprocal %}<p>{{ _('No reciprocal pairs') }}</p>{% endif %}
+      {% endif %}
+    </section>
+    <section>
+      <h2>{{ _('Participants') }} <span class="count">{{ people | length }}</span></h2>
+      <ul class="items">
+      {% for person in people %}
+        <li>
+          <details><summary>{{ person.name }}{% if people | selectattr('name', 'equalto', person.name) | list | length > 1 %} (#{{ person.id }}){% endif %}</summary>
+            <form method="post" action="{{ root }}/participants/{{ person.id }}/{{ 'edit' if event.state == 'draft' else 'wishlist' }}" class="stack compact">
+              {{ csrf_field(csrf) }}
+              {% if event.state == 'draft' %}<label>{{ _('Name') }}<input name="name" required maxlength="100" value="{{ person.name }}"></label>{% endif %}
+              <label>{{ _('Wishlist') }}<textarea name="wishlist" maxlength="2000">{{ person.wishlist }}</textarea></label><button>{{ _('Save participant') }}</button>
+            </form>
+            {% if event.state == 'draft' %}<form method="post" action="{{ root }}/participants/{{ person.id }}/remove">{{ csrf_field(csrf) }}<button class="danger">{{ _('Remove participant') }}</button></form>{% endif %}
+          </details>
+          {% if person.id in links %}<label>{{ _('Private link') }}<input readonly value="{{ links[person.id] }}"></label><div class="actions"><button class="copy-button" type="button" data-copy="{{ links[person.id] }}">{{ _('Copy link') }}</button><span class="copy-status" role="status"></span></div>{% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+      {% if event.state == 'draft' %}
+        <form method="post" action="{{ root }}/participants" class="stack compact">
+          {{ csrf_field(csrf) }}<label>{{ _('Name') }}<input name="name" required maxlength="100"></label><label>{{ _('Wishlist') }}<textarea name="wishlist" maxlength="2000"></textarea></label><button>{{ _('Add participant') }}</button>
+        </form>
+      {% endif %}
+    </section>
+    <section>
+      <h2>{{ _('Subgroups') }}</h2>
+      <ul class="items">
+      {% for group in groups %}
+        {% set group_url = root ~ '/subgroups/' ~ group.id %}
+        <li><details><summary>{{ group.name }}{% if group.no_intra_exchange %} &middot; {{ _('No intra-group draws') }}{% endif %}</summary>
+          {% if event.state == 'draft' %}
+          <form method="post" action="{{ group_url }}/edit" class="stack compact">{{ csrf_field(csrf) }}<label>{{ _('Group name') }}<input name="name" required maxlength="100" value="{{ group.name }}"></label><label class="check"><input type="checkbox" name="no_intra_exchange"{% if group.no_intra_exchange %} checked{% endif %}> {{ _('No intra-group draws') }}</label><button>{{ _('Save subgroup') }}</button></form>
+          {% endif %}
+          <ul class="members">
+          {% for person in people if person.id in members[group.id] %}
+            <li>{{ person.name }}{% if event.state == 'draft' %}<form method="post" action="{{ group_url }}/members/{{ person.id }}/remove">{{ csrf_field(csrf) }}<button class="danger" aria-label="{{ _('Remove {name}', name=person.name) }}">{{ _('Remove') }}</button></form>{% endif %}</li>
+          {% endfor %}
+          </ul>
+          {% if event.state == 'draft' %}
+            {% if people | length > members[group.id] | length %}<form class="stack compact" method="post" action="{{ group_url }}/members">{{ csrf_field(csrf) }}<label>{{ _('Member') }}<select name="participant_id" required>{{ person_options(people, members[group.id]) }}</select></label><button>{{ _('Add member') }}</button></form>{% endif %}
+            <form method="post" action="{{ group_url }}/remove">{{ csrf_field(csrf) }}<button class="danger">{{ _('Remove subgroup') }}</button></form>
+          {% endif %}
+        </details></li>
+      {% else %}<li>{{ _('No subgroups') }}</li>{% endfor %}
+      </ul>
+      {% if event.state == 'draft' %}
+        <form method="post" action="{{ root }}/subgroups" class="stack compact">{{ csrf_field(csrf) }}<label>{{ _('Group name') }}<input name="name" required maxlength="100"></label><label class="check"><input type="checkbox" name="no_intra_exchange" checked> {{ _('No intra-group draws') }}</label><button>{{ _('Add subgroup') }}</button></form>
+      {% endif %}
+    </section>
+    <section>
+      <h2>{{ _('Directed exclusions') }}</h2>
+      <ul class="members">
+      {% for rule in exclusions %}<li>{{ names.get(rule.giver_id, '') }} {{ _('cannot draw') }} {{ names.get(rule.receiver_id, '') }}{% if event.state == 'draft' %}<form method="post" action="{{ root }}/exclusions/{{ rule.id }}/remove">{{ csrf_field(csrf) }}<button class="danger">{{ _('Remove') }}</button></form>{% endif %}</li>
+      {% else %}<li>{{ _('No directed exclusions') }}</li>{% endfor %}
+      </ul>
+      {% if event.state == 'draft' and people | length > 1 %}
+        <form method="post" action="{{ root }}/exclusions" class="stack compact">
+          {{ csrf_field(csrf) }}<div class="grid-fields"><label>{{ _('Giver') }}<select name="giver_id" required>{{ person_options(people) }}</select></label><label>{{ _('Excluded recipient') }}<select name="receiver_id" required>{{ person_options(people) }}</select></label></div><button>{{ _('Add exclusion') }}</button>
+        </form>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

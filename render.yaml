@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: secret-santa-service
+    runtime: docker
+    plan: starter
+    numInstances: 1
+    healthCheckPath: /healthz
+    disk:
+      name: santa-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////var/data/secret-santa.db
+      - key: APP_SECRET
+        generateValue: true
+      - key: PUBLIC_BASE_URL
+        sync: false
