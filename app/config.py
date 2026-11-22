@@ -3,6 +3,9 @@ import secrets
 from dataclasses import dataclass
 from urllib.parse import urlsplit
 
+from sqlalchemy.engine import make_url
+from sqlalchemy.exc import ArgumentError
+
 
 @dataclass(frozen=True)
 class Settings:
@@ -17,6 +20,17 @@ class Settings:
             if database_url.startswith(prefix):
                 database_url = 'postgresql+psycopg://' + database_url.removeprefix(prefix)
                 break
+        database_error = (
+            'DATABASE_URL must be a valid connection URL with all variable references resolved. '
+            'On Railway, reference Postgres.DATABASE_URL only from the app service, '
+            'and keep the database service connection URL independent of shared.DATABASE_URL.'
+        )
+        if '${{' in database_url:
+            raise RuntimeError(database_error)
+        try:
+            make_url(database_url)
+        except (ArgumentError, ValueError):
+            raise RuntimeError(database_error) from None
         public_url = os.getenv('PUBLIC_BASE_URL', 'http://127.0.0.1:8000').rstrip('/')
         parsed = urlsplit(public_url)
         if (parsed.scheme not in {'http', 'https'} or not parsed.hostname or parsed.path

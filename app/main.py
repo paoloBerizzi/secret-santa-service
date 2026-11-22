@@ -19,7 +19,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = settings
     app.state.engine = make_engine(settings.database_url)
     host = urlsplit(settings.public_url).hostname
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=[host])
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=[host, 'healthcheck.railway.app'])
 
     @app.middleware('http')
     async def privacy_headers(request: Request, call_next):

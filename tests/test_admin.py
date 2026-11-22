@@ -9,6 +9,14 @@ from app import draws
 from app.models import Assignment, Event, Participant, SubgroupMember
 
 
+def test_healthcheck_allows_railway_but_rejects_untrusted_hosts(browser):
+    for host in ('santa.test', 'healthcheck.railway.app'):
+        response = browser.get('/healthz', headers={'Host': host})
+        assert response.status_code == 200
+        assert response.json() == {'status': 'ok'}
+    assert browser.get('/healthz', headers={'Host': 'other.test'}).status_code == 400
+
+
 def test_csrf_and_event_scope(browser):
     first = browser.event().headers['location']
     second = browser.event('Other exchange').headers['location']
