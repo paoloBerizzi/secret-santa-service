@@ -37,6 +37,8 @@ Open `http://127.0.0.1:8000`. The default SQLite database is `secret-santa.db` i
 
 ## Organizer guide
 
+The public `/how-to-use` page contains organizer and participant instructions in Italian and English, with a link in every page's footer. No organizer or participant link is needed to read it.
+
 1. On the first page, enter the event title, choose an icon, and enter the budget, currency, exchange date, and optional notes. Select **Escludi gli scambi reciproci** if two people must not draw each other. Click **Crea evento**. You can change the icon in event details while the event is a draft.
 2. The app immediately opens the private organizer dashboard at `/admin/<admin_token>`. Use **Copia il link organizzatore** and store the link somewhere safe. Anyone with it can manage the event; there is no login or recovery if the link is lost. Each event has its own dashboard link.
 3. Under **Partecipanti**, add each person's name and optionally their gift ideas. Open a participant's name to edit or remove them. Events support 2 to 32 participants.

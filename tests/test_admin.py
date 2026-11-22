@@ -1,4 +1,5 @@
 from html import unescape
+import re
 
 import pytest
 from sqlalchemy import select
@@ -15,6 +16,25 @@ def test_healthcheck_allows_railway_but_rejects_untrusted_hosts(browser):
         assert response.status_code == 200
         assert response.json() == {'status': 'ok'}
     assert browser.get('/healthz', headers={'Host': 'other.test'}).status_code == 400
+
+
+def test_public_usage_guide_and_language_switch(browser):
+    browser.cookies.clear()
+    response = browser.get('/how-to-use')
+    assert response.status_code == 200
+    browser.csrf = re.search(r'name="csrf" value="([0-9a-f]{64})"', response.text)[1]
+    assert '<h1>Come funziona</h1>' in response.text
+    assert 'Verifica le regole' in response.text
+    assert 'Per i partecipanti' in response.text
+    assert 'href="/how-to-use"' in browser.get('/').text
+    switched = browser.submit('/language', language='en', return_to='/how-to-use')
+    assert switched.status_code == 303
+    assert switched.headers['location'] == '/how-to-use'
+    english = browser.get('/how-to-use')
+    assert '<h1>How to use</h1>' in english.text
+    assert 'This does not save assignments or activate links.' in english.text
+    assert 'For participants' in english.text
+    assert 'Railway' not in english.text and 'DATABASE_URL' not in english.text
 
 
 def test_csrf_and_event_scope(browser):

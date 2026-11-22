@@ -18,7 +18,7 @@ def change_language(request: Request, form: Form):
     if selected not in LANGUAGES:
         raise HTTPException(422, 'The request was not valid.')
     target = form.get('return_to', '/')
-    if not isinstance(target, str) or not re.fullmatch(r'/(?:|(?:admin|reveal)/[A-Za-z0-9_-]{43})', target):
+    if not isinstance(target, str) or not re.fullmatch(r'/(?:|how-to-use|(?:admin|reveal)/[A-Za-z0-9_-]{43})', target):
         target = '/'
     response = RedirectResponse(target, 303)
     response.set_cookie(LANGUAGE_COOKIE, selected, max_age=31536000, httponly=True,
@@ -29,6 +29,11 @@ def change_language(request: Request, form: Form):
 @router.get('/')
 def new_event(request: Request):
     return page(request, 'new_event.html', currencies=CURRENCIES)
+
+
+@router.get('/how-to-use')
+def how_to_use(request: Request):
+    return page(request, 'how_to_use.html')
 
 
 @router.post('/events')

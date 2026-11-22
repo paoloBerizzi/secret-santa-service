@@ -6,7 +6,7 @@
   <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false}'>
   <title>{% block title %}Secret Santa{% endblock %}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" integrity="sha384-HtMZLkYo+pR5/u7zCzXxMJP6QoNnQJt1qkHM0EaOPvGDIzaVZbmYr/TlvUZ/sKAg" crossorigin="anonymous">
-  <link rel="stylesheet" href="/static/app.css?v=8">
+  <link rel="stylesheet" href="/static/app.css?v=9">
   <script defer src="/static/vendor/htmx.min.js"></script>
   <script defer src="/static/app.js"></script>
 </head>
@@ -36,6 +36,8 @@
       <button type="submit" name="language" value="en" lang="en" aria-pressed="{{ 'true' if locale == 'en' else 'false' }}">English</button>
     </form>
   </div></header>
-  <main class="shell">{% block content %}{% endblock %}</main>
+  <main class="shell">{% block content %}{% endblock %}
+    <footer class="site-footer"><a href="/how-to-use">{{ _('How to use') }}</a></footer>
+  </main>
 </body>
 </html>

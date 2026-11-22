@@ -64,6 +64,11 @@ body {
 .mark { display: grid; place-items: center; width: 2.35rem; height: 2.35rem; border: 1px solid #749789; border-radius: 50%; color: var(--gold); font-size: 1.35rem; }
 main.shell { position: relative; z-index: 1; min-height: calc(100vh - 4.5rem); padding: 1px clamp(1.25rem, 4%, 3.5rem) 3rem; background: rgba(255,255,255,.72); }
 .narrow { max-width: 36rem; margin: clamp(2.5rem, 7vh, 5rem) auto; padding-bottom: 2rem; }
+.site-footer { padding-top: 1rem; border-top: 1px solid var(--line); }
+.guide section { margin-block: 2rem; }
+.guide p { margin-block: 1rem; }
+.guide ol { padding-left: 1.5rem; list-style: decimal; }
+.guide li { margin-block: 1rem; }
 h1, h2 { font-family: Georgia, 'Times New Roman', serif; line-height: 1.15; font-weight: 700; }
 h1 { margin: 0 0 1.25rem; font-size: 2.55rem; color: #173a2e; }
 h2 { margin: 0 0 1rem; font-size: 1.4rem; }
