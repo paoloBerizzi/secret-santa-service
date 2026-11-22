@@ -108,9 +108,18 @@ def update_settings(request: Request, session: Database, event: Managed, form: F
     return finish(session, request)
 
 
+@router.post('/wishlist-settings')
+def update_wishlist_settings(request: Request, session: Database, event: Managed, form: Form):
+    claim(session, event, 'draft', 'drawn', 'locked')
+    event.wishlist_enabled = form.get('wishlist_enabled') == 'on'
+    return finish(session, request)
+
+
 @router.post('/participants')
 def add_participant(request: Request, session: Database, event: Managed, form: Form):
     claim(session, event, 'draft')
+    if not event.wishlist_enabled and 'wishlist' in form:
+        raise HTTPException(409, 'Wishlists are disabled for this event.')
     count = session.scalar(select(func.count()).select_from(Participant).where(Participant.event_id == event.id))
     if count is not None and count >= MAX_PARTICIPANTS:
         raise HTTPException(422, {'message': 'An event can have at most {limit} participants.', 'limit': MAX_PARTICIPANTS})
@@ -127,6 +136,8 @@ def change_participant(request: Request, session: Database, event: Managed, form
     action = request.scope['route'].name
     if action == 'wishlist_participant':
         claim(session, event, 'draft', 'drawn', 'locked', bump=False)
+        if not event.wishlist_enabled:
+            raise HTTPException(409, 'Wishlists are disabled for this event.')
         person.wishlist = text(form, 'wishlist', 2000)
     else:
         claim(session, event, 'draft')
@@ -134,7 +145,10 @@ def change_participant(request: Request, session: Database, event: Managed, form
             session.delete(person)
         else:
             person.name = text(form, 'name', 100, required=True)
-            person.wishlist = text(form, 'wishlist', 2000)
+            if event.wishlist_enabled:
+                person.wishlist = text(form, 'wishlist', 2000)
+            elif 'wishlist' in form:
+                raise HTTPException(409, 'Wishlists are disabled for this event.')
     return finish(session, request)
 
 

@@ -15,7 +15,7 @@ router = APIRouter(prefix='/reveal/{participant_token}')
 def reveal(request: Request, participant_token: str, session: Database):
     recipient = aliased(Participant)
     row = session.execute(
-         select(Event.title, Event.icon, Event.budget, Event.currency, Event.exchange_date, Event.notes,
+         select(Event.title, Event.icon, Event.budget, Event.currency, Event.exchange_date, Event.notes, Event.wishlist_enabled,
              Participant.name.label('own_name'), Participant.wishlist.label('own_wishlist'), recipient.name.label('recipient_name'),
                recipient.wishlist.label('recipient_wishlist'))
         .join(Participant, Participant.event_id == Event.id)
@@ -40,6 +40,8 @@ def save_wishlist(request: Request, participant_token: str, form: Form, session:
         claim(session, event, 'locked', bump=False)
     except HTTPException:
         raise HTTPException(404, 'Link not found.') from None
+    if not event.wishlist_enabled:
+        raise HTTPException(409, 'Wishlists are disabled for this event.')
     participant.wishlist = text(form, 'wishlist', 2000)
     session.commit()
     return RedirectResponse(request.url.path.removesuffix('/wishlist'), 303)

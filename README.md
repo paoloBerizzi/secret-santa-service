@@ -41,16 +41,16 @@ The public `/how-to-use` page contains organizer and participant instructions in
 
 1. On the first page, enter the event title, choose an icon, and enter the budget, currency, exchange date, and optional notes. Select **Escludi gli scambi reciproci** if two people must not draw each other. Click **Crea evento**. You can change the icon in event details while the event is a draft.
 2. The app immediately opens the private organizer dashboard at `/admin/<admin_token>`. Use **Copia il link organizzatore** and store the link somewhere safe. Anyone with it can manage the event; there is no login or recovery if the link is lost. Each event has its own dashboard link.
-3. Under **Partecipanti**, add each person's name and optionally their gift ideas. Open a participant's name to edit or remove them. Events support 2 to 32 participants.
+3. Wishlists are enabled by default. Under **Dettagli dell'evento**, use **Attiva le liste dei desideri** and save the setting to turn them off or on at any time, including after locking. Disabling hides saved wishes without deleting them; they reappear when re-enabled. Under **Partecipanti**, add each person's name and, when enabled, optionally their gift ideas. Open a participant's name to edit or remove them. Events support 2 to 32 participants.
 4. Optionally add **Sottogruppi** for households or couples, add members, and enable **Escludi scambi nel gruppo**. Members of an enabled subgroup cannot draw one another; people may be in more than one subgroup. Under **Esclusioni individuali**, add one-way exclusions for particular givers and recipients.
 5. Use **Verifica le regole** to check feasibility. Fix any reported restrictions, then choose **Avvia l'estrazione**. The app assigns everyone one recipient and everyone receives one gift; it does not display all pairings on the dashboard.
 6. Choose **Blocca e attiva i link**. For each person, copy their **Link privato** and send it only to that person. The service does not send emails or messages automatically.
-7. Once locked, event settings, participants, and rules cannot be changed, but wishlists remain editable. To change the draw, confirm and choose **Annulla l'estrazione**; this deletes the assignments and invalidates the old participant links. Draw and lock again and send the new links. Reset cannot make someone forget a recipient they already saw.
+7. Once locked, other event settings, participants, and rules cannot be changed, but the wishlist setting and enabled wishlists remain editable. To change the draw, confirm and choose **Annulla l'estrazione**; this deletes the assignments and invalidates the old participant links. Draw and lock again and send the new links. Reset cannot make someone forget a recipient they already saw.
 
 ## Participant guide
 
-1. Open the private link sent by the organizer. It shows your assigned recipient, the gift budget and date, and your recipient's gift ideas. Keep the link private: anyone with it can see this information and edit your wishlist.
-2. Under **La tua lista dei desideri**, enter your own suggestions in the text field, then click **Salva lista dei desideri**. Return to the same link to update them later. The person assigned to you sees your latest saved ideas; you cannot see who drew you.
+1. Open the private link sent by the organizer. It shows your assigned recipient, the gift budget and date, and, if enabled, your recipient's gift ideas. Keep the link private: anyone with it can see this information and edit your wishlist when enabled.
+2. If wishlists are enabled, under **La tua lista dei desideri**, enter your own suggestions in the text field, then click **Salva lista dei desideri**. Return to the same link to update them later. The person assigned to you sees your latest saved ideas; you cannot see who drew you.
 3. If the link no longer works, ask the organizer whether the draw was reset and request your new link.
 
 Participants can edit their own suggestions **after the draw is locked and their links are shared**. There is currently no participant link for entering suggestions before the draw; the organizer can enter or update them from the dashboard instead.

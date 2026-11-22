@@ -24,12 +24,14 @@ ITALIAN = {
         "Verifica se è possibile un'estrazione completa con le regole salvate. Il risultato appare sotto il pulsante e la verifica viene eseguita anche quando si apre il pannello. Se nulla è cambiato, un nuovo clic può mostrare lo stesso risultato. Non salva abbinamenti e non attiva i link. Se le regole impediscono l'estrazione o la verifica non termina, modifica una restrizione e riprova.",
     'Create the assignments once the rules allow a draw. The dashboard does not display all pairings.':
         "Crea gli abbinamenti quando le regole consentono l'estrazione. Il pannello non mostra tutti gli abbinamenti.",
-    'Activate the private participant links, then copy each link and send it only to that person. The service does not send emails or messages automatically. Event settings, participants, and rules can no longer be changed, but wishlists remain editable.':
-        "Attiva i link privati dei partecipanti, poi copia ogni link e invialo solo alla persona interessata. Il servizio non invia email o messaggi automaticamente. Non sarà più possibile modificare impostazioni, partecipanti e regole, ma le liste dei desideri restano modificabili.",
-    'Open the private link your organizer sent you to see your recipient, the budget, the exchange date, and their gift ideas. You cannot see who drew you.':
-        "Apri il link privato inviato dall'organizzatore per vedere il destinatario del tuo regalo, il budget, la data dello scambio e le sue idee regalo. Non puoi vedere chi ti ha estratto.",
-    'Use Your wishlist to enter your own gift ideas, then save them. Return to the same link to update them; the person giving to you sees your latest saved wishlist. Participant links are available only after the organizer locks the draw. Before that, ask the organizer to enter your ideas.':
-        "Usa La tua lista dei desideri per inserire le tue idee regalo e salvarle. Torna allo stesso link per aggiornarle: chi ti farà il regalo vedrà l'ultima lista salvata. I link dei partecipanti sono disponibili solo dopo il blocco dell'estrazione. Prima, chiedi all'organizzatore di inserire le tue idee.",
+    'Wishlists are enabled by default. Change this setting on the organizer page at any time. Turning it off hides saved wishes without deleting them; they reappear when enabled again.':
+        "Le liste dei desideri sono attive per impostazione predefinita. Puoi cambiare questa impostazione nella pagina dell'organizzatore in qualsiasi momento. Disattivandola, i desideri salvati vengono nascosti senza essere eliminati e riappaiono quando la riattivi.",
+    'Activate the private participant links, then copy each link and send it only to that person. The service does not send emails or messages automatically. Other event settings, participants, and rules can no longer be changed, but the wishlist setting and enabled wishlists remain editable.':
+        "Attiva i link privati dei partecipanti, poi copia ogni link e invialo solo alla persona interessata. Il servizio non invia email o messaggi automaticamente. Le altre impostazioni dell'evento, i partecipanti e le regole non sono più modificabili, ma l'impostazione delle liste e le liste attive restano modificabili.",
+    'Open the private link your organizer sent you to see your recipient, the budget, the exchange date, and their gift ideas if wishlists are enabled. You cannot see who drew you.':
+        "Apri il link privato inviato dall'organizzatore per vedere il destinatario del tuo regalo, il budget, la data dello scambio e le sue idee regalo se le liste sono attive. Non puoi vedere chi ti ha estratto.",
+    'If wishlists are enabled, use Your wishlist to enter your own gift ideas, then save them. Return to the same link to update them; the person giving to you sees your latest saved wishlist. Participant links are available only after the organizer locks the draw. Before that, ask the organizer to enter your ideas.':
+        "Se le liste sono attive, usa La tua lista dei desideri per inserire le tue idee regalo e salvarle. Torna allo stesso link per aggiornarle: chi ti farà il regalo vedrà l'ultima lista salvata. I link dei partecipanti sono disponibili solo dopo il blocco dell'estrazione. Prima, chiedi all'organizzatore di inserire le tue idee.",
     'Anyone with a participant link can see that assignment and edit that participant’s wishlist. Do not share your organizer or participant link publicly.':
         "Chiunque abbia il link di un partecipante può vedere il suo abbinamento e modificare la sua lista dei desideri. Non condividere pubblicamente il link dell'organizzatore o dei partecipanti.",
     'To change a draw, the organizer must confirm Reset draw. This deletes the assignments and invalidates old participant links. Run and lock a new draw, then send the new links. Resetting cannot make someone forget a recipient they already saw. If your link stops working, contact your organizer.':
@@ -58,6 +60,8 @@ ITALIAN = {
     'Reset draw': "Annulla l'estrazione",
     'Event details': "Dettagli dell'evento",
     'Save settings': 'Salva impostazioni',
+    'Enable wishlists': 'Attiva le liste dei desideri',
+    'Save wishlist setting': 'Salva impostazione liste dei desideri',
     'Participants': 'Partecipanti',
     'Name': 'Nome',
     'Wishlist': 'Lista dei desideri',
@@ -105,6 +109,7 @@ ITALIAN = {
     'The combined rules prevent a complete draw. Try relaxing an exclusion or allowing reciprocal pairs.':
         'Le regole impediscono un’estrazione completa. Modifica un’esclusione o consenti gli scambi reciproci.',
     'Link not found.': 'Link non trovato.',
+    'Wishlists are disabled for this event.': 'Le liste dei desideri sono disattivate per questo evento.',
     'Item not found.': 'Elemento non trovato.',
     'Membership not found.': 'Appartenenza al gruppo non trovata.',
     'The event changed or is not editable. Reload or reset the draw first.':

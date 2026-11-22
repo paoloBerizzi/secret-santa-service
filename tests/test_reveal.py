@@ -5,7 +5,7 @@ from urllib.parse import urlsplit
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Assignment, Participant
+from app.models import Assignment, Event, Participant
 
 
 def links(response):
@@ -114,6 +114,51 @@ def test_wishlist_placeholder_is_not_saved_and_existing_wishes_remain(browser):
     assert 'aria-label="La tua lista dei desideri"' in italian
     assert 'Inserisci qui le idee regalo che vorresti ricevere quest’anno.' in italian
     assert '>A book</textarea>' in italian
+
+
+def test_wishlist_setting_hides_blocks_and_restores_wishes_in_every_state(browser):
+    admin = browser.event().headers['location']
+    other_admin = browser.event('Other exchange').headers['location']
+    assert 'name="wishlist_enabled" checked' in browser.get(admin).text
+    for name in ('Anna', 'Bruno'):
+        assert browser.submit(admin + '/participants', name=name, wishlist=f'{name} wishes').status_code == 303
+
+    assert browser.submit(admin + '/wishlist-settings').status_code == 303
+    dashboard = browser.get(admin).text
+    assert 'name="wishlist_enabled" checked' not in dashboard
+    assert 'name="wishlist"' not in dashboard and 'Anna wishes' not in dashboard
+    assert 'name="wishlist_enabled" checked' in browser.get(other_admin).text
+    assert browser.submit(admin + '/participants/1/edit', name='Anne').status_code == 303
+    assert browser.submit(admin + '/participants/1/edit', name='Anne', wishlist='Forbidden').status_code == 409
+    assert browser.submit(admin + '/participants', name='Extra', wishlist='Forbidden').status_code == 409
+    assert browser.submit(admin + '/participants/1/wishlist', wishlist='Forbidden').status_code == 409
+    assert browser.submit(admin + '/participants', name='Extra').status_code == 303
+    assert browser.submit(admin + '/participants/3/remove').status_code == 303
+    with Session(browser.app.state.engine) as session:
+        assert session.get(Participant, 1).wishlist == 'Anna wishes'
+        assert session.get(Event, 1).wishlist_enabled is False
+
+    assert browser.submit(admin + '/draw').status_code == 303
+    assert browser.submit(admin + '/wishlist-settings', wishlist_enabled='on').status_code == 303
+    assert 'Anna wishes' in browser.get(admin).text
+    assert browser.submit(admin + '/lock').status_code == 303
+    private_links = links(browser.get(admin))
+    assert 'Anna wishes' in browser.get(private_links[0]).text
+
+    assert browser.submit(admin + '/wishlist-settings').status_code == 303
+    dashboard = browser.get(admin).text
+    assert 'name="wishlist"' not in dashboard
+    assert '<strong>Anne</strong>' in dashboard and '<summary>Anne</summary>' not in dashboard
+    for link in private_links:
+        page = browser.get(link).text
+        assert 'wishlist' not in page.lower()
+        assert 'Anna wishes' not in page and 'Bruno wishes' not in page
+        assert browser.submit(link + '/wishlist', wishlist='Forbidden').status_code == 409
+    assert browser.submit(admin + '/participants/1/wishlist', wishlist='Forbidden').status_code == 409
+    assert browser.submit(admin + '/wishlist-settings', wishlist_enabled='on').status_code == 303
+    assert 'Anna wishes' in browser.get(private_links[0]).text
+    assert browser.submit(private_links[0] + '/wishlist', wishlist='New wishes').status_code == 303
+    assert 'New wishes' in browser.get(private_links[0]).text
 
 
 def test_reveal_uses_event_icon(browser):

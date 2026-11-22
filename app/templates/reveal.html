@@ -9,9 +9,9 @@
   <h2 class="reveal-recipient">{{ reveal.recipient_name }}</h2>
   <dl class="reveal-details"><div><dt>{{ _('Gift budget') }}</dt><dd>{{ reveal.currency }} {{ reveal.budget | money }}</dd></div><div><dt>{{ _('Exchange date') }}</dt><dd><time datetime="{{ reveal.exchange_date }}">{{ reveal.exchange_date.strftime('%d/%m/%Y') if locale == 'it' else reveal.exchange_date }}</time></dd></div></dl>
   {% if reveal.notes %}<p class="multiline">{{ reveal.notes }}</p>{% endif %}
-  <section class="reveal-section"><h2>{{ _("{name}'s wishlist", name=reveal.recipient_name) }}</h2><p class="multiline">{{ reveal.recipient_wishlist or _('No wishlist yet.') }}</p></section>
+  {% if reveal.wishlist_enabled %}<section class="reveal-section"><h2>{{ _("{name}'s wishlist", name=reveal.recipient_name) }}</h2><p class="multiline">{{ reveal.recipient_wishlist or _('No wishlist yet.') }}</p></section>
   <section class="reveal-section"><h2>{{ _('Your wishlist') }}</h2>
     <form method="post" action="{{ request.url.path }}/wishlist" class="stack">{{ csrf_field(csrf) }}<textarea name="wishlist" maxlength="2000" aria-label="{{ _('Your wishlist') }}" placeholder="{{ _('Enter gift ideas you would like to receive this year.') }}">{{ reveal.own_wishlist }}</textarea><button class="primary">{{ _('Save wishlist') }}</button></form>
-  </section>
+  </section>{% endif %}
 </div>
 {% endblock %}

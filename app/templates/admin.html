@@ -35,27 +35,31 @@
         {% if event.notes %}<p class="multiline">{{ event.notes }}</p>{% endif %}
         {% if event.no_reciprocal %}<p>{{ _('No reciprocal pairs') }}</p>{% endif %}
       {% endif %}
+      <form class="stack compact" method="post" action="{{ root }}/wishlist-settings">
+        {{ csrf_field(csrf) }}<label class="check"><input type="checkbox" name="wishlist_enabled"{% if event.wishlist_enabled %} checked{% endif %}> {{ _('Enable wishlists') }}</label>
+        <button>{{ _('Save wishlist setting') }}</button>
+      </form>
     </section>
     <section>
       <h2>{{ _('Participants') }} <span class="count">{{ people | length }}</span></h2>
       <ul class="items">
       {% for person in people %}
         <li>
-          <details><summary>{{ person.name }}{% if people | selectattr('name', 'equalto', person.name) | list | length > 1 %} (#{{ person.id }}){% endif %}</summary>
+          {% if event.state == 'draft' or event.wishlist_enabled %}<details><summary>{{ person.name }}{% if people | selectattr('name', 'equalto', person.name) | list | length > 1 %} (#{{ person.id }}){% endif %}</summary>
             <form method="post" action="{{ root }}/participants/{{ person.id }}/{{ 'edit' if event.state == 'draft' else 'wishlist' }}" class="stack compact">
               {{ csrf_field(csrf) }}
               {% if event.state == 'draft' %}<label>{{ _('Name') }}<input name="name" required maxlength="100" value="{{ person.name }}"></label>{% endif %}
-              <label>{{ _('Wishlist') }}<textarea name="wishlist" maxlength="2000">{{ person.wishlist }}</textarea></label><button>{{ _('Save participant') }}</button>
+              {% if event.wishlist_enabled %}<label>{{ _('Wishlist') }}<textarea name="wishlist" maxlength="2000">{{ person.wishlist }}</textarea></label>{% endif %}<button>{{ _('Save participant') }}</button>
             </form>
             {% if event.state == 'draft' %}<form method="post" action="{{ root }}/participants/{{ person.id }}/remove">{{ csrf_field(csrf) }}<button class="danger">{{ _('Remove participant') }}</button></form>{% endif %}
-          </details>
+          </details>{% else %}<strong>{{ person.name }}{% if people | selectattr('name', 'equalto', person.name) | list | length > 1 %} (#{{ person.id }}){% endif %}</strong>{% endif %}
           {% if person.id in links %}<label>{{ _('Private link') }}<input readonly value="{{ links[person.id] }}"></label><div class="actions"><button class="copy-button" type="button" data-copy="{{ links[person.id] }}">{{ _('Copy link') }}</button><span class="copy-status" role="status"></span></div>{% endif %}
         </li>
       {% endfor %}
       </ul>
       {% if event.state == 'draft' %}
         <form method="post" action="{{ root }}/participants" class="stack compact">
-          {{ csrf_field(csrf) }}<label>{{ _('Name') }}<input name="name" required maxlength="100"></label><label>{{ _('Wishlist') }}<textarea name="wishlist" maxlength="2000"></textarea></label><button>{{ _('Add participant') }}</button>
+          {{ csrf_field(csrf) }}<label>{{ _('Name') }}<input name="name" required maxlength="100"></label>{% if event.wishlist_enabled %}<label>{{ _('Wishlist') }}<textarea name="wishlist" maxlength="2000"></textarea></label>{% endif %}<button>{{ _('Add participant') }}</button>
         </form>
       {% endif %}
     </section>

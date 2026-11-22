@@ -2,12 +2,37 @@ from html import unescape
 import re
 
 import pytest
-from sqlalchemy import select
+from alembic import command
+from alembic.config import Config
+from sqlalchemy import create_engine, select, text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app import draws
 from app.models import Assignment, Event, Participant, SubgroupMember
+
+
+def test_wishlist_migration_preserves_existing_events(tmp_path, monkeypatch):
+    url = f'sqlite:///{tmp_path / "migration.db"}'
+    monkeypatch.setenv('DATABASE_URL', url)
+    monkeypatch.setenv('PUBLIC_BASE_URL', 'http://localhost:8000')
+    monkeypatch.delenv('APP_SECRET', raising=False)
+    config = Config('alembic.ini')
+    command.upgrade(config, '0002')
+    engine = create_engine(url)
+    with engine.begin() as connection:
+        connection.execute(text(
+            "INSERT INTO events (title, budget, currency, exchange_date, notes, admin_digest, "
+            "no_reciprocal, state, revision) VALUES "
+            "('Existing', 100, 'USD', '2026-12-24', '', 'digest', 0, 'locked', 0)"
+        ))
+    command.upgrade(config, 'head')
+    with engine.connect() as connection:
+        assert connection.scalar(text("SELECT wishlist_enabled FROM events WHERE title = 'Existing'")) == 1
+    command.downgrade(config, '0002')
+    with engine.connect() as connection:
+        assert connection.scalar(text("SELECT title FROM events")) == 'Existing'
+    engine.dispose()
 
 
 def test_healthcheck_allows_railway_but_rejects_untrusted_hosts(browser):

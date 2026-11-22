@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import CheckConstraint, ForeignKey, ForeignKeyConstraint, String, UniqueConstraint
+from sqlalchemy import CheckConstraint, ForeignKey, ForeignKeyConstraint, String, UniqueConstraint, true
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -24,6 +24,7 @@ class Event(Base):
     notes: Mapped[str] = mapped_column(String(2000), default='')
     admin_digest: Mapped[str] = mapped_column(String(64), unique=True)
     no_reciprocal: Mapped[bool] = mapped_column(default=False)
+    wishlist_enabled: Mapped[bool] = mapped_column(default=True, server_default=true())
     state: Mapped[str] = mapped_column(String(8), default='draft')
     revision: Mapped[int] = mapped_column(default=0)
     draw_nonce: Mapped[str | None] = mapped_column(String(64))
